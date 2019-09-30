@@ -2,6 +2,11 @@ import { Board, Move } from '../types/Board';
 
 export enum PieceType {
   Pawn,
+  Rook,
+  Knight,
+  Bishop,
+  Queen,
+  King
 }
 
 export interface PieceModel {

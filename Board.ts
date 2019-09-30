@@ -1,8 +1,17 @@
-import { Board, BoardState, BoardChange, ChangeResult, Square, Move } from './types/Board';
-import { Color, Piece } from './types/Piece';
+import { 
+  Board,
+  BoardState,
+  BoardChange,
+  ChangeResult,
+  Square,
+  Move,
+  Color,
+  Piece,
+  PieceType
+} from './types';
 
 const toggleColor = (color: Color) =>
-  color === 'White' ? 'Black' : 'White';
+  color === Color.White ? Color.Black : Color.White;
 
 /**
  * Function that checks if a board configuration is valid.
@@ -33,15 +42,15 @@ const isValid = (board: Board): boolean => {
 const getChange = (board: Board, pos: Square, piece: Piece): BoardChange => {
   const newSquare = board[pos[0]][pos[1]]
   if (newSquare !== null) {
-    if (newSquare.type === 'King') {
+    if (newSquare.type === PieceType.King) {
       return {
         color: toggleColor(newSquare.color),
       };
     } else {
       return {
         color: toggleColor(newSquare.color),
-        type: board[pos[0]][pos[1]].type,
-        takenBy: piece.type,
+        type: board[pos[0]][pos[1]],
+        takenBy: piece,
       };
     }
   }

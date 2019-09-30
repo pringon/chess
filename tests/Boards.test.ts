@@ -3,7 +3,7 @@ import { BoardState, Board, Move } from '../types/Board';
 
 describe('dud', () => {
   test('should be a dud', () => {
-    console.log('Not implemented');
+    console.warn('Not implemented');
     expect(true).toBe(true);
   });
 })

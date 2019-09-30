@@ -1,8 +1,13 @@
-import { Color, Piece, PieceType } from './types/Piece'; 
-import { Board, Move } from './types/Board';
+import {
+  Color,
+  Piece,
+  PieceType,
+  Board,
+  Move
+} from './types'; 
 
 const pawnValid = (board: Board, [ start, end ]: Move): boolean => {
-  console.log('Not implemented.');
+  console.warn('Not implemented.');
   return false;
 };
 
