@@ -6,13 +6,11 @@ import {
 } from '../types';
 import { getPiece } from '../Piece';
 
-const emptyBoard = (): Board => (
-  [
-    [null, null, null],
-    [null, null, null],
-    [null, null, null]
-  ]
-);
+const emptyBoard = (): Board => [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null]
+];
 
 describe('Piece', () => {
   test('should instantiate a piece', () => {

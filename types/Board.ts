@@ -2,41 +2,41 @@ import { Piece, Color } from './';
 
 type Row = number;
 type Column = number;
-export type Square = [Row, Column];
-export type Move = [Square, Square];
+export type Square = Readonly<[Row, Column]>;
+export type Move = Readonly<[Square, Square]>;
 /** 
  * Contains information on current board configuration as a 2-D matrix of [Pieces].  
  * Size must be: 8x8.
 */
-export type Board = Array<Array<Piece | null>>;
+export type Board = Readonly<Array<Array<Piece | null>>>;
 /**
  * Stores the state of the game including the board configuration, how many turns have passed and
  * the who's turn currently is.
  */
-export type BoardState = {
+export type BoardState = Readonly<{
   board: Board,
   turns: number,
   color: Color,
-};
+}>;
 
-type GameWon = {
-  color: Color,
-};
-type PieceTaken = {
-  color: Color,
-  type: Piece,
+type GameWon = Readonly<{
+  type: 'GameWon',
+}>;
+type PieceTaken = Readonly<{
+  type: 'PieceTaken',
+  piece: Piece,
   takenBy: Piece,
-};
+}>;
 /**
  * [BoardChange] event that is emitted when a piece is removed from the board.
  */
-export type BoardChange = GameWon | PieceTaken | null;
+export type BoardChange = Readonly<GameWon | PieceTaken>;
 /**
  * Outcome of altering the state of the game. Includes the new state,
  * the move taken as well as the the change that happened.
  */
-export type ChangeResult = {
+export type ChangeResult = Readonly<{
   boardState: BoardState,
   move: Move,
-  change: BoardChange,
-};
+  change?: BoardChange,
+}>;
