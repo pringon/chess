@@ -1,16 +1,56 @@
 import {
   Color,
+  Square,
   Piece,
   PieceType,
   Board,
   Move
 } from './types'; 
 
+const outOfBounds = ([start, end]: Move): boolean => (
+  start[0] < 0 || start[0] > 7 || start[1] < 0 || start[1] > 7
+  || end[0] < 0 || end[0] > 7 || end[1] < 0 || end[1] > 7
+);
+
+const onSquare = (id: number, square: Piece | null) => !!square && id === square.id;
+
+const moveOneForward = (
+  board: Board,
+  colorForward: number,
+  verticalDist: number,
+  horizontalDist: number,
+  end: Square
+) => (
+  verticalDist === colorForward && horizontalDist === 0
+  && !board[end[0]][end[1]]
+);
+
+const moveTwoForward = (
+  board: Board,
+  startRow: number,
+  colorForward: number,
+  verticalDist: number,
+  horizontalDist: number,
+  [start, end]: Move
+) => (
+  start[0] === startRow && verticalDist === 2 * colorForward
+  ? !board[end[0] - colorForward][end[1]] && !board[end[0]][end[1]] && horizontalDist === 0
+  : false 
+);
+
+const moveDiagonally = (board: Board, color: Color, horizontalDist: number, end: Square) => {
+  const landingSquare = board[end[0]][end[1]]
+  return Math.abs(horizontalDist) === 1
+    ? !!landingSquare && landingSquare.color !== color
+    : false;
+};
+
+const all = (...args: boolean[]): boolean => args.reduce((acc, x) => !acc || !x ? false : acc, true);
+
+const either = (...args: boolean[]): boolean => args.reduce((acc, x) => x ? x : acc, false);
+
 const pawnValid = (id: number, color: Color) => (board: Board, [ start, end ]: Move): boolean => {
-  if (
-    start[0] < 0 || start[0] > 7 || start[1] < 0 || start[1] > 7
-    || end[0] < 0 || end[0] > 7 || end[1] < 0 || end[1] > 7
-  ) {
+  if (outOfBounds([start, end])) {
     return false;
   }
   const verticalDist = end[0] - start[0];
@@ -18,25 +58,14 @@ const pawnValid = (id: number, color: Color) => (board: Board, [ start, end ]: M
   const pawnStartRow = color === Color.White ? 1 : 6;
   const colorForward = color === Color.White ? 1 : -1;
   const startSquare = board[start[0]][start[1]];
-  if (!startSquare || id !== startSquare.id) {
-    return false;
-  }
-  if (verticalDist * colorForward > 2) {
-    return false;
-  }
-  if (start[0] === pawnStartRow && verticalDist === 2 * colorForward) {
-    return !board[end[0]- colorForward][end[1]] && !board[end[0]][end[1]] && horizontalDist === 0;
-  }
-  if (horizontalDist !== 0) {
-    if (Math.abs(horizontalDist) > 1) {
-      return false;
-    }
-    return !!board[end[0]][end[1]];
-  }
-  if (verticalDist === colorForward && !board[end[0]][end[1]]) {
-    return true;
-  }
-  return false;
+  return all(
+    onSquare(id, startSquare),
+    either(
+      moveTwoForward(board, pawnStartRow, colorForward, verticalDist, horizontalDist, [start, end]),
+      moveDiagonally(board, color, horizontalDist, end),
+      moveOneForward(board, colorForward, verticalDist, horizontalDist, end)
+    )
+  ) 
 };
 
 export const getPiece = (id: number, type: PieceType, color: Color): Piece => {
