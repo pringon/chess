@@ -39,17 +39,20 @@ const isValid = (board: Board): boolean => {
  * @param piece piece making the move.
  * @returns the event that has happened or nul if the move didn't affect any other pieces.
  */
-const getChange = (board: Board, pos: Square, piece: Piece): BoardChange => {
-  const newSquare = board[pos[0]][pos[1]]
+const getChange = (board: Board, pos: Square, piece: Piece): BoardChange | null => {
+  const newSquare = board[pos[0]][pos[1]];
+  if (!!piece) {
+    throw Error('You need to provide a valid piece.');
+  }
   if (newSquare !== null) {
     if (newSquare.type === PieceType.King) {
       return {
-        color: toggleColor(newSquare.color),
+        type: 'GameWon'
       };
     } else {
       return {
-        color: toggleColor(newSquare.color),
-        type: board[pos[0]][pos[1]],
+        type: 'PieceTaken',
+        piece: newSquare,
         takenBy: piece,
       };
     }
@@ -68,14 +71,24 @@ export const movePiece = (boardState: BoardState, move: Move): ChangeResult => {
   const [start, end] = move;
   const { board } = boardState;
   const piece = board[start[0]][start[1]];
-  if (!piece.isValidMove(board, move)) {
+  if (!piece || !piece.validMove(board, move)) {
     throw Error(`Illegal move: ${move.toString()} on board: ${board.toString()}.`);
   }
-
-  const newBoardState = Object.assign({}, boardState);
-  newBoardState.board[start[0]][start[1]] = null;
-  newBoardState.board[end[0]][end[1]] = piece;
-  newBoardState.color = toggleColor(boardState.color);
+  const newBoardState = {
+    ...boardState,
+    board: boardState.board.map((list, row) => (
+      list.map((value, column) => {
+        if (row === start[0] && column === start[1]) {
+          return null;
+        }
+        if (row === end[0] && column === end[1]) {
+          return piece;
+        }
+        return value;
+      })
+    )),
+    color: toggleColor(boardState.color),
+  };
   const changeResult: ChangeResult = {
     move,
     boardState: newBoardState,

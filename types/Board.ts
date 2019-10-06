@@ -2,13 +2,14 @@ import { Piece, Color } from './';
 
 type Row = number;
 type Column = number;
-export type Square = Readonly<[Row, Column]>;
-export type Move = Readonly<[Square, Square]>;
+export type Square = readonly [Row, Column];
+export type Move = readonly [Square, Square];
+export type RowLine = ReadonlyArray<Piece | null>;
 /** 
  * Contains information on current board configuration as a 2-D matrix of [Pieces].  
  * Size must be: 8x8.
 */
-export type Board = Readonly<Array<Array<Piece | null>>>;
+export type Board = ReadonlyArray<RowLine>;
 /**
  * Stores the state of the game including the board configuration, how many turns have passed and
  * the who's turn currently is.
@@ -38,5 +39,5 @@ export type BoardChange = Readonly<GameWon | PieceTaken>;
 export type ChangeResult = Readonly<{
   boardState: BoardState,
   move: Move,
-  change?: BoardChange,
+  change: BoardChange | null,
 }>;

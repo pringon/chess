@@ -9,9 +9,10 @@ export enum PieceType {
   King
 }
 
-export interface PieceModel {
+export type PieceModel = {
+  id: number;
   type: PieceType;
-  isValidMove: (board: Board, move: Move) => boolean;
+  validMove: (board: Board, move: Move) => boolean;
 };
 
 export enum Color {
@@ -19,6 +20,6 @@ export enum Color {
   Black,
 }
 
-export interface Piece extends PieceModel {
+export type Piece = PieceModel & {
   color: Color;
 };
