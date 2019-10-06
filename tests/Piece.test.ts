@@ -19,12 +19,7 @@ describe('Piece', () => {
   test('should instantiate a piece', () => {
     expect.assertions(2);
 
-    let pawn: Piece;
-    try {
-      pawn = getPiece(0, PieceType.Pawn, Color.White);
-    } catch (err) {
-      throw Error('Piece could not be created');
-    }
+    const pawn: Piece = getPiece(0, PieceType.Pawn, Color.White);
 
     expect(pawn.type).toBe(PieceType.Pawn);
     expect(pawn.color).toBe(Color.White);
@@ -116,5 +111,60 @@ describe('Pawn', () => {
 
     const takePiece = pawn.validMove(newBoard, [[1, 1], [2, 2]]);
     expect(takePiece).toBe(true); 
+  });
+});
+
+describe('Rook', () => {
+  let board: Board;
+  let rook: Piece;
+
+  beforeEach(() => {
+    const baseBoard = emptyBoard();
+    rook = getPiece(0, PieceType.Rook, Color.White);
+    board = placePiece(baseBoard, rook, [1, 1]);
+  });
+
+  it('should be able to move forwards', () => {
+    expect(rook.validMove(board, [[1, 1], [2, 1]])).toBe(true);
+    expect(rook.validMove(board, [[1, 1], [4, 1]])).toBe(true);
+    expect(rook.validMove(board, [[1, 1], [7, 1]])).toBe(true);
+  });
+  
+  it('should be able to move backwards', () => {
+    expect(rook.validMove(board, [[1, 1], [0, 1]])).toBe(true);
+  });
+  
+  it('should be able to move sideways', () => {
+    // LEFT
+    expect(rook.validMove(board, [[1, 1], [1, 0]])).toBe(true);
+    // RIGHT
+    expect(rook.validMove(board, [[1, 1], [1, 2]])).toBe(true);
+    expect(rook.validMove(board, [[1, 1], [1, 4]])).toBe(true);
+    expect(rook.validMove(board, [[1, 1], [1, 7]])).toBe(true);
+  });
+
+  it('should not be able to move diagonally', () => {
+    expect(rook.validMove(board, [[1, 1], [2, 2]])).toBe(true);
+    expect(rook.validMove(board, [[1, 1], [4, 4]])).toBe(true);
+    expect(rook.validMove(board, [[1, 1], [3, 4]])).toBe(true);
+    expect(rook.validMove(board, [[1, 1], [6, 3]])).toBe(true);
+  });
+
+  it('should not be able to move through allied pieces', () => {
+    const pawn = getPiece(2, PieceType.Pawn, Color.White);
+    const newBoard = placePiece(board, pawn, [3, 1]);
+    expect(rook.validMove(newBoard, [[1, 1], [5, 1]])).toBe(false);
+  });
+
+  it('should not be able to move through enemy pieces', () => {
+    const pawn = getPiece(2, PieceType.Pawn, Color.Black);
+    const newBoard = placePiece(board, pawn, [3, 1]);
+    expect(rook.validMove(newBoard, [[1, 1], [5, 1]])).toBe(false);
+  });
+
+  it('should be able to take enemy pieces if they are in its path', () => {
+    const pawn = getPiece(2, PieceType.Pawn, Color.Black);
+    const newBoard = placePiece(board, pawn, [3, 1]);
+    expect(rook.validMove(newBoard, [[1, 2], [3, 1]])).toBe(true);
   });
 });
