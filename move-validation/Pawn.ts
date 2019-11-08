@@ -60,5 +60,5 @@ export const pawnValid = (id: number, color: Color) => (board: Board, [ start, e
       moveDiagonally(board, color, verticalDist, horizontalDist, end),
       moveOneForward(board, colorForward, verticalDist, horizontalDist, end)
     )
-  ) 
+  );
 };

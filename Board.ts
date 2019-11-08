@@ -97,3 +97,4 @@ export const movePiece = (boardState: BoardState, move: Move): ChangeResult => {
 
   return changeResult;
 };
+

@@ -2,8 +2,6 @@ import {
   Color,
   Piece,
   PieceType,
-  Board,
-  Move
 } from './types';
 import {
   pawnValid,
