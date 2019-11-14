@@ -109,6 +109,8 @@ describe('Pawn', () => {
   });
 });
 
+// TODO: Add tests for black rook
+// - Check if it's necessary.'
 describe('Rook', () => {
   let board: Board;
   let rook: Piece;
@@ -125,11 +127,11 @@ describe('Rook', () => {
     expect(rook.validMove(board, [[1, 1], [7, 1]])).toBe(true);
   });
 
-  xtest('should be able to move backwards', () => {
+  test('should be able to move backwards', () => {
     expect(rook.validMove(board, [[1, 1], [0, 1]])).toBe(true);
   });
 
-  xtest('should be able to move sideways', () => {
+  test('should be able to move sideways', () => {
     // LEFT
     expect(rook.validMove(board, [[1, 1], [1, 0]])).toBe(true);
     // RIGHT
@@ -138,28 +140,28 @@ describe('Rook', () => {
     expect(rook.validMove(board, [[1, 1], [1, 7]])).toBe(true);
   });
 
-  xtest('should not be able to move diagonally', () => {
-    expect(rook.validMove(board, [[1, 1], [2, 2]])).toBe(true);
-    expect(rook.validMove(board, [[1, 1], [4, 4]])).toBe(true);
-    expect(rook.validMove(board, [[1, 1], [3, 4]])).toBe(true);
-    expect(rook.validMove(board, [[1, 1], [6, 3]])).toBe(true);
+  test('should not be able to move diagonally', () => {
+    expect(rook.validMove(board, [[1, 1], [2, 2]])).toBe(false);
+    expect(rook.validMove(board, [[1, 1], [4, 4]])).toBe(false);
+    expect(rook.validMove(board, [[1, 1], [3, 4]])).toBe(false);
+    expect(rook.validMove(board, [[1, 1], [6, 3]])).toBe(false);
   });
 
-  xtest('should not be able to move through allied pieces', () => {
+  test('should not be able to move through allied pieces', () => {
     const pawn = getPiece(2, PieceType.Pawn, Color.White);
     const newBoard = placePiece(board, pawn, [3, 1]);
     expect(rook.validMove(newBoard, [[1, 1], [5, 1]])).toBe(false);
   });
 
-  xtest('should not be able to move through enemy pieces', () => {
+  test('should not be able to move through enemy pieces', () => {
     const pawn = getPiece(2, PieceType.Pawn, Color.Black);
     const newBoard = placePiece(board, pawn, [3, 1]);
     expect(rook.validMove(newBoard, [[1, 1], [5, 1]])).toBe(false);
   });
 
-  xtest('should be able to take enemy pieces if they are in xits path', () => {
+  test('should be able to take enemy pieces if they are in its path', () => {
     const pawn = getPiece(2, PieceType.Pawn, Color.Black);
     const newBoard = placePiece(board, pawn, [3, 1]);
-    expect(rook.validMove(newBoard, [[1, 2], [3, 1]])).toBe(true);
+    expect(rook.validMove(newBoard, [[1, 1], [3, 1]])).toBe(true);
   });
 });
